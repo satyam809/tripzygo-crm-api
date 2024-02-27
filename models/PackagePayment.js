@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Query = require('./Query'); // Ensure this import is correct
+const Query = require('./query'); // Import the Query model
 
-const PackagePayment = sequelize.define('PackagePayment', {
+const packagePayment = sequelize.define('packagePayment', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,7 +15,11 @@ const PackagePayment = sequelize.define('PackagePayment', {
   queryId: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 0
+    defaultValue: 0,
+    references: {
+      model: Query,
+      key: 'id'
+    }
   },
   packageId: {
     type: DataTypes.INTEGER,
@@ -82,6 +86,6 @@ const PackagePayment = sequelize.define('PackagePayment', {
 });
 
 // Define the association: Each PackagePayment belongs to one Query
-PackagePayment.belongsTo(Query, { foreignKey: 'queryId', as: 'query' });
+packagePayment.belongsTo(Query, { foreignKey: 'queryId', as: 'query' });
 
-module.exports = PackagePayment;
+module.exports = packagePayment;

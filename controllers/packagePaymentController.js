@@ -1,15 +1,21 @@
-const packagePayment = require('../models/PackagePayment');
+const PackagePayment = require('../models/packagePayment');
+const Query = require('../models/query');
+
 exports.getPackagePaymentById = async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await packagePayment.findByPk(id);
-        if (result) {
-            res.json(result);
-        } else {
-            res.status(404).json({ message: "Package payment not found" });
+      const packagePaymentData = await PackagePayment.findByPk(id, {
+        include: {
+          model: Query,
+          as: 'query' // Assuming the association alias is 'query'
         }
+      });
+      if (!packagePaymentData) {
+        return res.status(404).json({ error: 'Package payment not found' });
+      }
+      res.json(packagePaymentData);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      console.error('Error fetching package payment:', error);
+      res.status(500).json({ error: 'Internal server error' });
     }
 };
-

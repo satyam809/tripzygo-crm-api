@@ -1,8 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const PackagePayment = require('./PackagePayment'); // Ensure this import is correct
+//const packagePayment = require('./packagePayment');// Ensure this import is correct
 
-const Query = sequelize.define('Query', {
+const Query = sequelize.define('query', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -216,6 +216,6 @@ const Query = sequelize.define('Query', {
 });
 
 // Define the association: One Query has many PackagePayments
-Query.hasMany(PackagePayment, { foreignKey: 'queryId', as: 'packagePayments' });
+//Query.hasMany(packagePayment, { foreignKey: 'queryId', as: 'packagePayments' });
 
 module.exports = Query;
