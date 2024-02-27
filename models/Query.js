@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Destination = require('./destination');
+const QuerySource = require('./querySource');
 //const packagePayment = require('./packagePayment');// Ensure this import is correct
 
 const Query = sequelize.define('query', {
@@ -56,7 +58,11 @@ const Query = sequelize.define('query', {
   },
   destinationId: {
     type: DataTypes.INTEGER,
-    defaultValue: 0
+    defaultValue: 0,
+    references: {
+      model: Destination,
+      key: 'id'
+    }
   },
   startDate: {
     type: DataTypes.DATE,
@@ -111,8 +117,11 @@ const Query = sequelize.define('query', {
   },
   leadSource: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
+    defaultValue: 0,
+    references: {
+      model: QuerySource,
+      key: 'id'
+    }
   },
   assignTo: {
     type: DataTypes.INTEGER,
@@ -217,5 +226,7 @@ const Query = sequelize.define('query', {
 
 // Define the association: One Query has many PackagePayments
 //Query.hasMany(packagePayment, { foreignKey: 'queryId', as: 'packagePayments' });
+Query.belongsTo(Destination, { foreignKey: 'destinationId', as: 'destination' });
+Query.belongsTo(QuerySource, { foreignKey: 'leadSource', as: 'querySource' });
 
 module.exports = Query;
