@@ -5,6 +5,7 @@ const sequelize = new Sequelize('crm', 'root', '', {
     port: 3308,
     host: 'localhost',
     dialect: 'mysql', // or any other dialect
+    timezone: '+05:30'
 });
 // Test the database connection
 sequelize.authenticate()
