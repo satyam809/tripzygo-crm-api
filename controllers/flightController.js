@@ -17,7 +17,7 @@ exports.updateFlight = async (req, res) => {
         if (!flight) {
             return res.status(404).json({ status: false,message: 'Flight not found' });
         }
-        await flight.save(); // This will only update fields that have changed
+        await flight.update({ ...req.body });
 
         res.status(200).json({ status: true, data: flight, message: 'Flight updated successfully' });
     } catch (error) {
