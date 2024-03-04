@@ -3,6 +3,7 @@ const router = express.Router();
 const userController = require('./controllers/userController');
 const packagePaymentController = require('./controllers/packagePaymentController');
 const hotelController = require('./controllers/hotelController');
+const activityController = require('./controllers/activityController');
 
 router.get('/users', userController.getAllUsers);
 router.post('/users', userController.createUser);
@@ -15,8 +16,8 @@ router.get('/api/packagePayment/:id', packagePaymentController.getPackagePayment
 
 // Specify multer configuration in hotelController.js
 router.post('/api/hotel', hotelController.upload.single('voucher'), hotelController.createHotel);
-// router.get('/api/test',(req,res)=>{
-//     res.send('test');
-// })
+
+
+router.post('/api/activity', activityController.upload.none(), activityController.createActivity);
 
 module.exports = router;

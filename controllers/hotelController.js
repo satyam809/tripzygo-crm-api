@@ -1,4 +1,4 @@
-const Hotel = require('../models/Hotel');
+const Hotel = require('../models/hotel');
 const multer = require('multer'); // Import multer for file uploads
 const path = require('path');
 
