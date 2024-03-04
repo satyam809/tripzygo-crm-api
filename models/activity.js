@@ -4,7 +4,7 @@ const sequelize = require('../config/database');
 const Query = require('./query');
 const Destination = require('./destination');
 
-// Define the Destination model
+// Define the Activity model
 const Activity = sequelize.define('activities', {
     id: {
         type: DataTypes.INTEGER,
@@ -60,10 +60,12 @@ const Activity = sequelize.define('activities', {
 }, {
     tableName: 'activities', // Specify the table name
     timestamps: false, // Disable timestamps
-    // Other options such as freezeTableName, underscored, etc. can be added here
+    indexes: [{ fields: ['query_id'] }, { fields: ['destination_id'] }] // Add indexes for frequent queries
 });
-Activity.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
-Activity.belongsTo(Destination, { foreignKey: 'destination_id ', as: 'destination' });
 
-// Export the Destination model
+// Correct the associations
+Activity.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
+Activity.belongsTo(Destination, { foreignKey: 'destination_id', as: 'destination' });
+
+// Export the Activity model
 module.exports = Activity;

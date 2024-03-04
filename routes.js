@@ -21,6 +21,7 @@ router.post('/api/hotel', hotelController.upload.single('voucher'), hotelControl
 
 
 router.post('/api/activity', activityController.upload.none(), activityController.createActivity);
+router.put('/api/activity/:id', activityController.upload.none(), activityController.updateActivity);
 
 
 router.post('/api/flight', flightController.upload.none(), flightController.createFlight);
