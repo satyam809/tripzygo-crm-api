@@ -4,6 +4,7 @@ exports.upload = multer();
 
 exports.createFlight = async (req, res) => {
     try {
+        console.log(req.body);
         const flight = await Flight.create(req.body);
         res.status(201).json(flight);
     } catch (error) {

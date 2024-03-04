@@ -62,7 +62,7 @@ const Activity = sequelize.define('activities', {
     timestamps: false, // Disable timestamps
     // Other options such as freezeTableName, underscored, etc. can be added here
 });
-Activity.belongsTo(Query, { foreignKey: 'query_id ', as: 'query' });
+Activity.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
 Activity.belongsTo(Destination, { foreignKey: 'destination_id ', as: 'destination' });
 
 // Export the Destination model
