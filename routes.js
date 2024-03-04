@@ -4,6 +4,7 @@ const userController = require('./controllers/userController');
 const packagePaymentController = require('./controllers/packagePaymentController');
 const hotelController = require('./controllers/hotelController');
 const activityController = require('./controllers/activityController');
+const flightController = require('./controllers/flightController');
 
 router.get('/users', userController.getAllUsers);
 router.post('/users', userController.createUser);
@@ -19,5 +20,8 @@ router.post('/api/hotel', hotelController.upload.single('voucher'), hotelControl
 
 
 router.post('/api/activity', activityController.upload.none(), activityController.createActivity);
+
+
+router.post('/api/flight', flightController.upload.none(), flightController.createFlight);
 
 module.exports = router;

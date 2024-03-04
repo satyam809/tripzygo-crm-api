@@ -5,15 +5,11 @@ const Query = require('./query');
 const Destination = require('./destination');
 
 // Define the Destination model
-const Activity = sequelize.define('activities', {
+const Flight = sequelize.define('flights', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-    },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: true
     },
     query_id: {
         type: DataTypes.INTEGER,
@@ -23,7 +19,22 @@ const Activity = sequelize.define('activities', {
         },
         allowNull: true
     },
-    destination_id: {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    number: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    from_destination_id: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: 'Destination',
+            key: 'id'
+        },
+        allowNull: true
+    }, to_destination_id: {
         type: DataTypes.INTEGER,
         references: {
             model: 'Destination',
@@ -31,7 +42,7 @@ const Activity = sequelize.define('activities', {
         },
         allowNull: true
     },
-    type: {
+    duration: {
         type: DataTypes.STRING,
         allowNull: true
     },
@@ -58,12 +69,12 @@ const Activity = sequelize.define('activities', {
         defaultValue: Sequelize.NOW
     }
 }, {
-    tableName: 'activities', // Specify the table name
+    tableName: 'flights', // Specify the table name
     timestamps: false, // Disable timestamps
     // Other options such as freezeTableName, underscored, etc. can be added here
 });
-Activity.belongsTo(Query, { foreignKey: 'query_id ', as: 'query' });
-Activity.belongsTo(Destination, { foreignKey: 'destination_id ', as: 'destination' });
+Flight.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
+Flight.belongsTo(Destination, { foreignKey: 'destination_id ', as: 'destination' });
 
 // Export the Destination model
-module.exports = Activity;
+module.exports = Flight;
