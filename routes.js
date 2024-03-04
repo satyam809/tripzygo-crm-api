@@ -24,6 +24,7 @@ router.post('/api/activity', activityController.upload.none(), activityControlle
 
 
 router.post('/api/flight', flightController.upload.none(), flightController.createFlight);
+router.put('/api/flight/:id', flightController.upload.none(), flightController.updateFlight);
 
 
 router.post('/api/transportation', transportationController.upload.none(), transportationController.createTransportation);

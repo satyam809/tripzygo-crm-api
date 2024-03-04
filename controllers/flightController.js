@@ -4,10 +4,23 @@ exports.upload = multer();
 
 exports.createFlight = async (req, res) => {
     try {
-        console.log(req.body);
         const flight = await Flight.create(req.body);
-        res.status(201).json(flight);
+        res.status(200).json({ status: true, data: flight, message: 'Flight created successfully' });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ status: false,message: error.message });
+    }
+};
+exports.updateFlight = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const flight = await Flight.findByPk(id);
+        if (!flight) {
+            return res.status(404).json({ status: false,message: 'Flight not found' });
+        }
+        await flight.save(); // This will only update fields that have changed
+
+        res.status(200).json({ status: true, data: flight, message: 'Flight updated successfully' });
+    } catch (error) {
+        res.status(500).json({ status: false, message: error.message });
     }
 };

@@ -4,7 +4,7 @@ const sequelize = require('../config/database');
 const Query = require('./query');
 const Destination = require('./destination');
 
-// Define the Destination model
+// Define the Flight model
 const Flight = sequelize.define('flights', {
     id: {
         type: DataTypes.INTEGER,
@@ -34,7 +34,8 @@ const Flight = sequelize.define('flights', {
             key: 'id'
         },
         allowNull: true
-    }, to_destination_id: {
+    },
+    to_destination_id: {
         type: DataTypes.INTEGER,
         references: {
             model: 'Destination',
@@ -71,10 +72,13 @@ const Flight = sequelize.define('flights', {
 }, {
     tableName: 'flights', // Specify the table name
     timestamps: false, // Disable timestamps
-    // Other options such as freezeTableName, underscored, etc. can be added here
+    indexes: [{ fields: ['from_destination_id'] }, { fields: ['to_destination_id'] }] // Add indexes for frequent queries
 });
-Flight.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
-Flight.belongsTo(Destination, { foreignKey: 'destination_id ', as: 'destination' });
 
-// Export the Destination model
+// Correct the associations
+Flight.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
+Flight.belongsTo(Destination, { foreignKey: 'from_destination_id', as: 'fromDestination' });
+Flight.belongsTo(Destination, { foreignKey: 'to_destination_id', as: 'toDestination' });
+
+// Export the Flight model
 module.exports = Flight;
