@@ -63,7 +63,7 @@ const Transportation = sequelize.define('transportations', {
     // Other options such as freezeTableName, underscored, etc. can be added here
 });
 Transportation.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
-Transportation.belongsTo(Destination, { foreignKey: 'destination_id ', as: 'destination' });
+Transportation.belongsTo(Destination, { foreignKey: 'destination_id', as: 'destination' });
 
 // Export the Destination model
 module.exports = Transportation;

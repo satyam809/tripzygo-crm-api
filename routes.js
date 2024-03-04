@@ -27,5 +27,6 @@ router.post('/api/flight', flightController.upload.none(), flightController.crea
 
 
 router.post('/api/transportation', transportationController.upload.none(), transportationController.createTransportation);
+router.put('/api/transportation/:id', transportationController.upload.none(), transportationController.updateTransportation);
 
 module.exports = router;
