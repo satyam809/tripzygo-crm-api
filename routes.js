@@ -18,6 +18,7 @@ router.get('/api/packagePayment/:id', packagePaymentController.getPackagePayment
 
 // Specify multer configuration in hotelController.js
 router.post('/api/hotel', hotelController.upload.single('voucher'), hotelController.createHotel);
+router.put('/api/hotel/:id', hotelController.upload.single('voucher'), hotelController.updatHotel);
 
 
 router.post('/api/activity', activityController.upload.none(), activityController.createActivity);
