@@ -6,6 +6,7 @@ const hotelController = require('./controllers/hotelController');
 const activityController = require('./controllers/activityController');
 const flightController = require('./controllers/flightController');
 const transportationController = require('./controllers/transportationController');
+const queryController = require('./controllers/queryController');
 
 router.get('/users', userController.getAllUsers);
 router.post('/users', userController.createUser);
@@ -15,6 +16,8 @@ router.delete('/users/:id', userController.deleteUser);
 
 router.get('/api/packagePayment', packagePaymentController.getAllPackagePayments);
 router.get('/api/packagePayment/:id', packagePaymentController.getPackagePaymentById);
+
+router.get('/api/query/:id', queryController.getQuery);
 
 // Specify multer configuration in hotelController.js
 router.post('/api/hotel', hotelController.upload.single('voucher'), hotelController.createHotel);
