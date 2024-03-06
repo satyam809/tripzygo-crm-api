@@ -1,7 +1,9 @@
 const PackagePayment = require('../models/packagePayment');
 const Query = require('../models/query');
-const Destination = require('../models/destination');
+const Destination = require('../models/city');
 const QuerySource = require('../models/querySource');
+const PackageBuilder = require('../models/packageBuilder');
+const AssignedUser = require('../models/userMaster');
 
 exports.getPackagePaymentById = async (req, res) => {
     const { id } = req.params;
@@ -19,8 +21,16 @@ exports.getPackagePaymentById = async (req, res) => {
               {
                 model: QuerySource,
                 as: 'querySource', // Assuming the association alias is 'querySource' in the Destination model
+              },
+              {
+                model: AssignedUser,
+                as: 'assignedUser', // Assuming the association alias is 'querySource' in the Destination model
               }
             ]
+          },
+          {
+            model: PackageBuilder,
+            as: 'packageBuilder', // Assuming the association alias is 'packageBuilder' in the Query model
           }
         ]
       });
@@ -57,8 +67,19 @@ exports.getAllPackagePayments = async (req, res) => {
             {
               model: QuerySource,
               as: 'querySource'
+            },
+            {
+              model: AssignedUser,
+              as: 'assignedUser', // Assuming the association alias is 'querySource' in the Destination model
             }
-          ]
+          ],
+          where: {
+            statusId: 5 // Only include queries with statusId = 5
+          }
+        },
+        {
+          model: PackageBuilder,
+          as: 'packageBuilder', // Assuming the association alias is 'packageBuilder' in the Query model
         }
       ],
       limit: pageSize, // Limit number of results per page

@@ -1,7 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Destination = require('./destination');
+const Destination = require('./city');
 const QuerySource = require('./querySource');
+const User = require('./userMaster');
 //const packagePayment = require('./packagePayment');// Ensure this import is correct
 
 const Query = sequelize.define('query', {
@@ -126,7 +127,11 @@ const Query = sequelize.define('query', {
   assignTo: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 0
+    defaultValue: 0,
+    references: {
+      model: User,
+      key: 'id'
+    }
   },
   updateDate: {
     type: DataTypes.DATE,
@@ -228,5 +233,6 @@ const Query = sequelize.define('query', {
 //Query.hasMany(packagePayment, { foreignKey: 'queryId', as: 'packagePayments' });
 Query.belongsTo(Destination, { foreignKey: 'destinationId', as: 'destination' });
 Query.belongsTo(QuerySource, { foreignKey: 'leadSource', as: 'querySource' });
+Query.belongsTo(User, { foreignKey: 'assignTo', as: 'assignedUser' });
 
 module.exports = Query;

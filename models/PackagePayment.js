@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Query = require('./query'); // Import the Query model
+const PackageBuilder = require('./packageBuilder');
 
 
 const packagePayment = sequelize.define('packagePayment', {
@@ -26,6 +27,10 @@ const packagePayment = sequelize.define('packagePayment', {
     type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
+    references: {
+      model: PackageBuilder,
+      key: 'id'
+    }
   },
   amount: {
     type: DataTypes.FLOAT,
@@ -88,6 +93,7 @@ const packagePayment = sequelize.define('packagePayment', {
 
 // Define the association: Each PackagePayment belongs to one Query
 packagePayment.belongsTo(Query, { foreignKey: 'queryId', as: 'query' });
+packagePayment.belongsTo(PackageBuilder, { foreignKey: 'packageId', as: 'packageBuilder' });
 
 
 module.exports = packagePayment;

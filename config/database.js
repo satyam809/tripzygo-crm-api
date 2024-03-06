@@ -1,7 +1,7 @@
 // config/database.js
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('crm', 'root', '', {
+const sequelize = new Sequelize('new_crm', 'root', '', {
     port: 3308,
     host: 'localhost',
     dialect: 'mysql', // or any other dialect
