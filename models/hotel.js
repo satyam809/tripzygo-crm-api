@@ -40,6 +40,10 @@ const Hotel = sequelize.define('hotelmaster', {
     },
     allowNull: true
   },
+  hotel_destination: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
   category: {
     type: DataTypes.INTEGER,
     allowNull: false,
