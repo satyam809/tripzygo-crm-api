@@ -1,17 +1,18 @@
 // Import Sequelize and the connection instance
-const { DataTypes, Sequelize } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database'); // Update this with your database configuration
+const Country = require('./country');
+const City = require('./city');
 const Query = require('./query');
-const Destination = require('./destination');
 
-// Define the Destination model
-const Hotel = sequelize.define('hotel', {
+// Define the HotelMaster model
+const Hotel = sequelize.define('hotelmaster', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  queryId: {
+  query_id: {
     type: DataTypes.INTEGER,
     references: {
       model: 'Query',
@@ -20,79 +21,142 @@ const Hotel = sequelize.define('hotel', {
     allowNull: true
   },
   name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(200),
     allowNull: true
   },
-  destination_id: {
+  countryId: {
     type: DataTypes.INTEGER,
     references: {
-      model: 'Destination',
+      model: 'Country',
       key: 'id'
     },
     allowNull: true
   },
-  type: {
-    type: DataTypes.STRING,
+  destination: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'City',
+      key: 'id'
+    },
     allowNull: true
   },
   category: {
-    type: DataTypes.STRING,
-    allowNull: true
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   },
   room_name: {
     type: DataTypes.STRING,
-    allowNull: true
+    allowNull: false,
+    defaultValue: 0
   },
   meal: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 0
   },
-  checkinDate: {
+  amenities: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: '0'
+  },
+  hotelPhoto: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  status: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1
+  },
+  hotelType: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  hotel_type: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  
+  checkIn: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  checkOut: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  numOfAdults:{
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },numOfKids:{
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },numOfRooms:{
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  details: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  mapURL: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  addedBy: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  dateAdded: {
     type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW
+  },
+  contactPerson: {
+    type: DataTypes.STRING(50),
     allowNull: true
   },
-  checkoutDate: {
-    type: DataTypes.DATE,
+  contactPersonEmail: {
+    type: DataTypes.STRING(250),
     allowNull: true
   },
-  checkInTime: {
-    type: DataTypes.TIME,
+  contactPersonPhone: {
+    type: DataTypes.STRING(150),
     allowNull: true
   },
-  checkOutTime: {
-    type: DataTypes.TIME,
+  alternateEmail: {
+    type: DataTypes.STRING(50),
     allowNull: true
   },
-  numOfAdults: {
-    type: DataTypes.INTEGER,
+  alternatePhone: {
+    type: DataTypes.STRING(15),
     allowNull: true
   },
-  numOfKids: {
-    type: DataTypes.INTEGER,
-    allowNull: true
-  },
-  numOfRooms: {
-    type: DataTypes.INTEGER,
+  imgLink: {
+    type: DataTypes.STRING(200),
     allowNull: true
   },
   voucher: {
-    type: DataTypes.STRING
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.NOW
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: Sequelize.NOW
+    type: DataTypes.STRING,
+    allowNull: true
   }
 }, {
-  tableName: 'hotel', // Specify the table name
-  timestamps: false, // Disable timestamps
-  // Other options such as freezeTableName, underscored, etc. can be added here
+  tableName: 'hotelmaster', // Specify the table name if it's different
+  timestamps: false // If you don't have timestamps in your table
 });
-Hotel.belongsTo(Query, { foreignKey: 'queryId', as: 'query' });
+Hotel.belongsTo(Country, { foreignKey: 'countryId', as: 'country' });
+Hotel.belongsTo(City, { foreignKey: 'destination', as: 'city' });
+Hotel.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
 
-// Export the Destination model
+// Export the HotelMaster model
 module.exports = Hotel;

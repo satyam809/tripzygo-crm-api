@@ -1,7 +1,10 @@
 const Hotel = require('../models/hotel');
+const Country = require('../models/country');
+const City = require('../models/city');
 const fs = require('fs');
 const multer = require('multer'); // Import multer for file uploads
 const path = require('path');
+const Sequelize = require('sequelize');
 
 // Multer configuration for file storage
 const storage = multer.diskStorage({
@@ -31,7 +34,7 @@ exports.createHotel = async (req, res) => {
 
     // Create hotel entry in the database
     const hotel = await Hotel.create(req.body);
-    res.status(201).json(hotel);
+    res.status(200).json({ status: true, data: hotel, message: 'Hotel created successfully' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -71,3 +74,74 @@ exports.updatHotel = async (req, res) => {
     res.status(400).json({ status: false, message: error.message });
   }
 };
+
+
+exports.searchHotel = async (req, res) => {
+  try {
+     console.log(req.params.search);
+     const keyword = req.params.search;
+     if (!keyword) {
+       return res.status(400).json({ status: false, message: 'Write something' });
+     }
+ 
+     // Fetch IDs of matching countries and cities
+     const matchingCountries = await Country.findAll({
+       where: { name: { [Sequelize.Op.like]: `%${keyword}%` } },
+       attributes: ['id']
+     });
+     const matchingCities = await City.findAll({
+       where: { name: { [Sequelize.Op.like]: `%${keyword}%` } },
+       attributes: ['id']
+     });
+ 
+     // Extract IDs for use in conditions
+     const countryIds = matchingCountries.map(country => country.id);
+     const cityIds = matchingCities.map(city => city.id);
+ 
+     // Initialize query conditions
+     let conditions = {
+       [Sequelize.Op.or]: [
+         { name: { [Sequelize.Op.like]: `%${keyword}%` } }, // Search by hotel name
+         { address: { [Sequelize.Op.like]: `%${keyword}%` } } // Search by hotel address
+       ]
+     };
+ 
+     // Adjust conditions to include matching countries and cities
+     if (countryIds.length > 0) {
+       conditions[Sequelize.Op.or].push({
+         countryId: { [Sequelize.Op.in]: countryIds }
+       });
+     }
+     if (cityIds.length > 0) {
+       conditions[Sequelize.Op.or].push({
+         destination: { [Sequelize.Op.in]: cityIds }
+       });
+     }
+ 
+     // Perform the search
+     const hotels = await Hotel.findAll({
+       where: conditions,
+       include: [
+         { model: Country, as: 'country' },
+         { model: City, as: 'city' }
+       ]
+     });
+ 
+     // Respond with the search results
+     res.status(200).json({ status: true, message: 'Search results', data: hotels });
+  } catch (error) {
+     // Handle any errors
+     console.error(error);
+     res.status(500).json({ status: false, message: 'An error occurred' });
+  }
+ };
+ 
+ 
+ 
+
+
+
+
+
+
+

@@ -1,6 +1,7 @@
 const Query = require('../models/query');
 const QuerySource = require('../models/querySource');
-const Destination = require('../models/destination');
+const Destination = require('../models/city');
+const AssignedUser = require('../models/userMaster');
 
 exports.getQuery = async (req, res) => {
     const { id } = req.params;
@@ -13,7 +14,10 @@ exports.getQuery = async (req, res) => {
                 },{
                     model: Destination,
                     as: 'destination' // Corrected alias to match the association
-                }
+                },{
+                    model: AssignedUser,
+                    as: 'assignedUser', // Assuming the association alias is 'querySource' in the Destination model
+                  }
             ]
         });
         if (!query) {
