@@ -39,6 +39,22 @@ exports.createHotel = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+exports.getHotel = async function (req, res) {
+  try {
+    const hotelId = req.params.id;
+    if (!hotelId) {
+      return res.status(400).json({ status: false, message: 'Hotel ID is required' });
+    }
+    const hotel = await Hotel.findByPk(hotelId);
+    if (!hotel) {
+      return res.status(404).json({ status: false, message: 'Hotel not found' });
+    }
+    res.status(200).json({ status: true, data: hotel, message: 'Hotel retrieved successfully' });
+  } catch (errors) {
+    res.status(400).json({ status: false, message: errors.message });
+  }
+
+}
 exports.updatHotel = async (req, res) => {
   try {
     const hotelId = req.params.id;

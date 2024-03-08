@@ -23,6 +23,7 @@ router.get('/api/query/:id', queryController.getQuery);
 router.get('/api/hotel/query/:id', hotelController.getAllQueryHotel);
 router.get('/api/hotel/search/:search', hotelController.searchHotel);
 router.post('/api/hotel', hotelController.upload.single('voucher'), hotelController.createHotel);
+router.get('/api/hotel/:id', hotelController.getHotel);
 router.put('/api/hotel/:id', hotelController.upload.single('voucher'), hotelController.updatHotel);
 
 

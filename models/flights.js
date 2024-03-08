@@ -2,7 +2,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const sequelize = require('../config/database');
 const Query = require('./query');
-const Destination = require('./destination');
 
 // Define the Flight model
 const Flight = sequelize.define('flights', {
@@ -27,20 +26,12 @@ const Flight = sequelize.define('flights', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    from_destination_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Destination',
-            key: 'id'
-        },
+    from_destination: {
+        type: DataTypes.STRING,
         allowNull: true
     },
-    to_destination_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Destination',
-            key: 'id'
-        },
+    to_destination: {
+        type: DataTypes.STRING,
         allowNull: true
     },
     duration: {
@@ -77,8 +68,6 @@ const Flight = sequelize.define('flights', {
 
 // Correct the associations
 Flight.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
-Flight.belongsTo(Destination, { foreignKey: 'from_destination_id', as: 'fromDestination' });
-Flight.belongsTo(Destination, { foreignKey: 'to_destination_id', as: 'toDestination' });
 
 // Export the Flight model
 module.exports = Flight;
