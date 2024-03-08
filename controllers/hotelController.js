@@ -78,66 +78,81 @@ exports.updatHotel = async (req, res) => {
 
 exports.searchHotel = async (req, res) => {
   try {
-     console.log(req.params.search);
-     const keyword = req.params.search;
-     if (!keyword) {
-       return res.status(400).json({ status: false, message: 'Write something' });
-     }
- 
-     // Fetch IDs of matching countries and cities
-     const matchingCountries = await Country.findAll({
-       where: { name: { [Sequelize.Op.like]: `%${keyword}%` } },
-       attributes: ['id']
-     });
-     const matchingCities = await City.findAll({
-       where: { name: { [Sequelize.Op.like]: `%${keyword}%` } },
-       attributes: ['id']
-     });
- 
-     // Extract IDs for use in conditions
-     const countryIds = matchingCountries.map(country => country.id);
-     const cityIds = matchingCities.map(city => city.id);
- 
-     // Initialize query conditions
-     let conditions = {
-       [Sequelize.Op.or]: [
-         { name: { [Sequelize.Op.like]: `%${keyword}%` } }, // Search by hotel name
-         { address: { [Sequelize.Op.like]: `%${keyword}%` } } // Search by hotel address
-       ]
-     };
- 
-     // Adjust conditions to include matching countries and cities
-     if (countryIds.length > 0) {
-       conditions[Sequelize.Op.or].push({
-         countryId: { [Sequelize.Op.in]: countryIds }
-       });
-     }
-     if (cityIds.length > 0) {
-       conditions[Sequelize.Op.or].push({
-         destination: { [Sequelize.Op.in]: cityIds }
-       });
-     }
- 
-     // Perform the search
-     const hotels = await Hotel.findAll({
-       where: conditions,
-       include: [
-         { model: Country, as: 'country' },
-         { model: City, as: 'city' }
-       ]
-     });
- 
-     // Respond with the search results
-     res.status(200).json({ status: true, message: 'Search results', data: hotels });
+    console.log(req.params.search);
+    const keyword = req.params.search;
+    if (!keyword) {
+      return res.status(400).json({ status: false, message: 'Write something' });
+    }
+
+    // Fetch IDs of matching countries and cities
+    const matchingCountries = await Country.findAll({
+      where: { name: { [Sequelize.Op.like]: `%${keyword}%` } },
+      attributes: ['id']
+    });
+    const matchingCities = await City.findAll({
+      where: { name: { [Sequelize.Op.like]: `%${keyword}%` } },
+      attributes: ['id']
+    });
+
+    // Extract IDs for use in conditions
+    const countryIds = matchingCountries.map(country => country.id);
+    const cityIds = matchingCities.map(city => city.id);
+
+    // Initialize query conditions
+    let conditions = {
+      [Sequelize.Op.or]: [
+        { name: { [Sequelize.Op.like]: `%${keyword}%` } }, // Search by hotel name
+        { address: { [Sequelize.Op.like]: `%${keyword}%` } } // Search by hotel address
+      ]
+    };
+
+    // Adjust conditions to include matching countries and cities
+    if (countryIds.length > 0) {
+      conditions[Sequelize.Op.or].push({
+        countryId: { [Sequelize.Op.in]: countryIds }
+      });
+    }
+    if (cityIds.length > 0) {
+      conditions[Sequelize.Op.or].push({
+        destination: { [Sequelize.Op.in]: cityIds }
+      });
+    }
+
+    // Perform the search
+    const hotels = await Hotel.findAll({
+      where: conditions,
+      include: [
+        { model: Country, as: 'country' },
+        { model: City, as: 'city' }
+      ]
+    });
+
+    // Respond with the search results
+    res.status(200).json({ status: true, message: 'Search results', data: hotels });
   } catch (error) {
-     // Handle any errors
-     console.error(error);
-     res.status(500).json({ status: false, message: 'An error occurred' });
+    // Handle any errors
+    console.error(error);
+    res.status(500).json({ status: false, message: 'An error occurred' });
   }
- };
- 
- 
- 
+};
+
+exports.getAllQueryHotel = async function (req, res) {
+  const queryId = req.params.id; // Assuming you're getting the query_id from the request parameters
+  try {
+    const hotels = await Hotel.findAll({
+      where: {
+        query_id: queryId
+      }
+    });
+
+    res.status(200).json({ status: true, message: 'Hotels found', data: hotels });
+  } catch (error) {
+    res.status(500).json({ status: false, message: 'An error occurred' });
+  }
+}
+
+
+
 
 
 

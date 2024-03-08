@@ -20,6 +20,7 @@ router.get('/api/packagePayment/:id', packagePaymentController.getPackagePayment
 router.get('/api/query/:id', queryController.getQuery);
 
 // Specify multer configuration in hotelController.js
+router.get('/api/hotel/query/:id', hotelController.getAllQueryHotel);
 router.get('/api/hotel/search/:search', hotelController.searchHotel);
 router.post('/api/hotel', hotelController.upload.single('voucher'), hotelController.createHotel);
 router.put('/api/hotel/:id', hotelController.upload.single('voucher'), hotelController.updatHotel);
