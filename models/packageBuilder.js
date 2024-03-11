@@ -31,7 +31,7 @@ const PackageBuilder = sequelize.define('packageBuilder', {
     allowNull: true
   }
 }, {
-  tableName: 'sys_packagebuilder', // Specify the table name
+  tableName: 'sys_packageBuilder', // Specify the table name
   timestamps: false, // Disable timestamps
   // Other options such as freezeTableName, underscored, etc. can be added here
 });

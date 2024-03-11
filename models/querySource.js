@@ -29,7 +29,7 @@ const QuerySource = sequelize.define('querySource', {
     defaultValue: 1
   }
 }, {
-  tableName: 'querysourcemaster',
+  tableName: 'querySourceMaster',
   timestamps: false // Assuming you don't have timestamp fields
 });
 

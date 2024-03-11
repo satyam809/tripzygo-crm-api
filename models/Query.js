@@ -225,7 +225,7 @@ const Query = sequelize.define('query', {
     allowNull: false
   }
 }, {
-  tableName: 'querymaster',
+  tableName: 'queryMaster',
   timestamps: false // If you don't have timestamps in your table
 });
 

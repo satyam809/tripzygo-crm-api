@@ -2,8 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Query = require('./query'); // Import the Query model
 const PackageBuilder = require('./packageBuilder');
-
-
 const packagePayment = sequelize.define('packagePayment', {
   id: {
     type: DataTypes.INTEGER,
