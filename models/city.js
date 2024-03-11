@@ -45,7 +45,7 @@ const CityMaster = sequelize.define('citymaster', {
     defaultValue: 0
   }
 }, {
-  tableName: 'citymaster', // Specify the table name if it's different
+  tableName: 'cityMaster', // Specify the table name if it's different
   timestamps: false // If you don't have timestamps in your table
 });
 
