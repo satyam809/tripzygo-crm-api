@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3002;
 const routes = require('./routes');
 
 // Middleware
+app.use(express.static('uploads'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
