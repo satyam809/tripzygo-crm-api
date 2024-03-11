@@ -1,7 +1,7 @@
 // config/database.js
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('tripzfp3_tripzfp3', 'tripzfp3_tripzfp3', 'Tripzygo@2703#', {
+const sequelize = new Sequelize('tripzfp3_app_crm_db', 'tripzfp3_app_crm_db', '@Tripzygo@2023#', {
     //port: 3308,
     host: '103.211.218.27',
     dialect: 'mysql', // or any other dialect
