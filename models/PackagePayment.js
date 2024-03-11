@@ -87,7 +87,7 @@ const packagePayment = sequelize.define('packagePayment', {
     defaultValue: 'idle'
   }
 }, {
-  tableName: 'sys_packagepayment',
+  tableName: 'sys_PackagePayment',
   timestamps: false
 });
 
