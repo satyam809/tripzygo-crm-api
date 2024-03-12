@@ -19,7 +19,7 @@ const UserMaster = sequelize.define('user', {
     allowNull: false
   }
 }, {
-  tableName: 'sys_usermaster', // Specify the table name if it's different
+  tableName: 'sys_userMaster', // Specify the table name if it's different
   timestamps: false // If you don't have timestamps in your table
 });
 

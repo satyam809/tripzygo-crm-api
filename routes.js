@@ -18,6 +18,7 @@ router.get('/api/packagePayment', packagePaymentController.getAllPackagePayments
 router.get('/api/packagePayment/:id', packagePaymentController.getPackagePaymentById);
 
 router.get('/api/query/:id', queryController.getQuery);
+router.get('/api/queryGuest/:id', queryController.getQueryGuest)
 
 // Specify multer configuration in hotelController.js
 router.get('/api/hotel/query/:id', hotelController.getAllQueryHotel);

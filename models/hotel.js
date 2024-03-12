@@ -6,7 +6,7 @@ const City = require('./city');
 const Query = require('./query');
 
 // Define the HotelMaster model
-const Hotel = sequelize.define('hotelmaster', {
+const Hotel = sequelize.define('hotelMaster', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -155,7 +155,7 @@ const Hotel = sequelize.define('hotelmaster', {
     allowNull: true
   }
 }, {
-  tableName: 'hotelmaster', // Specify the table name if it's different
+  tableName: 'hotelMaster', // Specify the table name if it's different
   timestamps: false // If you don't have timestamps in your table
 });
 Hotel.belongsTo(Country, { foreignKey: 'countryId', as: 'country' });
