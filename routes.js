@@ -7,6 +7,7 @@ const activityController = require('./controllers/activityController');
 const flightController = require('./controllers/flightController');
 const transportationController = require('./controllers/transportationController');
 const queryController = require('./controllers/queryController');
+const visaController = require('./controllers/visaController');
 
 router.get('/users', userController.getAllUsers);
 router.post('/users', userController.createUser);
@@ -41,5 +42,11 @@ router.get('/api/transportation', transportationController.getAllTransportations
 router.get('/api/transportation/:id', transportationController.getTransportation);
 router.post('/api/transportation', transportationController.upload.none(), transportationController.createTransportation);
 router.put('/api/transportation/:id', transportationController.upload.none(), transportationController.updateTransportation);
+
+router.get('/api/allPackageVisa/:packageId', visaController.getAllPackageVisa);
+router.get('/api/packageVisa/:id', visaController.getPackageVisa);
+router.post('/api/visa', visaController.upload.none(), visaController.saveVisa);
+router.put('/api/visa/:id', visaController.upload.none(), visaController.updateVisa);
+router.delete('/api/visa/:id', visaController.deleteVisa);
 
 module.exports = router;
