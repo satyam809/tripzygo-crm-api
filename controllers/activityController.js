@@ -24,3 +24,23 @@ exports.updateActivity = async (req, res) => {
         res.status(500).json({ status: false, message: error.message });
     }
 };
+exports.getAllActivities = async function(req, res){
+    try {
+        const activities = await Activity.findAll();
+        res.status(200).json({ status: true, data: activities, message: 'Activities fetched successfully' });
+    } catch (error) {
+        res.status(500).json({ status: false, message: error.message });
+    }
+}
+exports.getActivity = async (req,res)=>{
+    try {
+        const { id } = req.params;
+        const activity = await Activity.findByPk(id);
+        if (!activity) {
+            return res.status(404).json({ status: false,message: 'Activity not found' });
+        }
+        res.status(200).json({ status: true, data: activity, message: 'Activity fetched successfully' });
+    } catch (error) {
+        res.status(500).json({ status: false, message: error.message });
+    }
+}

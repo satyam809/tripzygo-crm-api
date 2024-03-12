@@ -27,9 +27,10 @@ router.post('/api/hotel', hotelController.upload.single('voucher'), hotelControl
 router.get('/api/hotel/:id', hotelController.getHotel);
 router.put('/api/hotel/:id', hotelController.upload.single('voucher'), hotelController.updatHotel);
 
-
-router.post('/api/activity', activityController.upload.none(), activityController.createActivity);
-router.put('/api/activity/:id', activityController.upload.none(), activityController.updateActivity);
+router.get('/api/activity', activityController.getAllActivities);
+router.get('/api/activity/:id', activityController.getActivity);
+router.post('/api/activity',  activityController.createActivity);
+router.put('/api/activity/:id',  activityController.updateActivity);
 
 router.get('/api/flight', flightController.getAllFlights);
 router.get('/api/flight/:id', flightController.getFlight);
