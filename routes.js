@@ -7,6 +7,7 @@ const paymentController = require('./controllers/paymentController');
 const queryController = require('./controllers/queryController');
 const transportationController = require('./controllers/transportationController');
 const visaController = require('./controllers/visaController');
+const guestController = require('./controllers/guestController');
 
 
 router.post('/api/hotel', hotelController.upload.single('voucher'), hotelController.createHotel);
@@ -42,6 +43,7 @@ router.get('/api/visaByPayment/:id', visaController.getVisaByPayment);
 router.get('/api/payment', paymentController.getAllPayments);
 
 router.get('/api/queryByPayment/:id', queryController.getQueryByPayment);
+router.get('/api/guestsByQuery/:id', guestController.getGuestsByQuery);
 
 
 module.exports = router;
