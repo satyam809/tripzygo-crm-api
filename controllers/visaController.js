@@ -48,7 +48,6 @@ exports.get = async (req, res) => {
 
 exports.update = async function (req, res) {
     const id = req.params.id;
-    console.log(req.file);
     try {
         // Check if a file was uploaded
         if (req.file) {

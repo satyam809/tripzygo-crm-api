@@ -20,16 +20,6 @@ const upload = multer({ storage: storage });
 
 exports.createHotel = async (req, res) => {
     try {
-        // Access the uploaded file information
-        const file = req.file;
-        // if (!file) {
-        //     return res.status(400).json({ message: 'No image uploaded' });
-        // }
-
-        // Save file information into the database (e.g., file path)
-        req.body.voucher = file.filename;
-
-        // Create hotel entry in the database
         const hotel = new Hotel(req.body);
         await hotel.save();
         res.status(200).json({ status: true, data: hotel, message: 'Hotel created successfully' });
@@ -54,28 +44,28 @@ exports.getHotel = async (req, res) => {
 // Assuming you have already set up multer as shown in your code snippet
 
 exports.updateHotel = async function (req, res) {
-    const hotelId = req.params.id;
+    const id = req.params.id;
     try {
         // Check if a file was uploaded
         if (req.file) {
-            // Path to the old voucher image
-            const oldVoucherPath = path.join(__dirname, '../uploads/voucher/', req.body.voucher);
+            // Path to the old visa image
+            const oldVoucherPath = path.join(__dirname, '../uploads/voucher/', req.file.filename);
 
-            // Delete the old voucher image if it exists
+            // Delete the old visa image if it exists
             if (fs.existsSync(oldVoucherPath)) {
                 fs.unlinkSync(oldVoucherPath);
             }
 
-            // Update the hotel document with the new voucher image information
+            // Update the visa document with the new visa image information
             req.body.voucher = req.file.filename;
-            const hotel = await Hotel.findByIdAndUpdate(hotelId, req.body, { new: true });
+            console.log(req.body);
+            const hotel = await Hotel.findByIdAndUpdate(id, req.body, { new: true });
             if (!hotel) {
                 return res.status(404).json({ message: 'Hotel not found' });
             }
-            res.status(200).json({ status: true, data: hotel, message: 'Hotel updated successfully with new voucher' });
+            res.status(200).json({ status: true, data: hotel, message: 'Hotel updated successfully with new file' });
         } else {
-            // If no file was uploaded, update the hotel with the provided data
-            const hotel = await Hotel.findByIdAndUpdate(hotelId, req.body, { new: true });
+            const hotel = await Hotel.findByIdAndUpdate(id, req.body, { new: true });
             if (!hotel) {
                 return res.status(404).json({ message: 'Hotel not found' });
             }
