@@ -2,45 +2,68 @@ const Activity = require('../models/activity');
 const multer = require('multer');
 exports.upload = multer();
 
-exports.createActivity = async (req, res) => {
+exports.create = async (req, res) => {
     try {
-        const activity = await Activity.create(req.body);
+        const activity = new Activity(req.body);
+        await activity.save();
         res.status(200).json({ status: true, data: activity, message: 'Activity created successfully' });
     } catch (error) {
-        res.status(400).json({ status: false,message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
-exports.updateActivity = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const activity = await Activity.findByPk(id);
-        if (!activity) {
-            return res.status(404).json({ status: false,message: 'Activity not found' });
-        }
-        await activity.update({ ...req.body });
 
+exports.get = async (req, res) => {
+    const activityId = req.params.id;
+    try {
+        const activity = await Activity.findById(activityId);
+        if (!activity) {
+            return res.status(404).json({ message: 'Activity not found' });
+        }
+        res.status(200).json({ status: true, data: activity, message: 'Activity retrieved successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Assuming you have already set up multer as shown in your code snippet
+
+exports.update = async function (req, res) {
+    const activitytId = req.params.id;
+    try {
+        // Check if a file was uploaded
+        const activity = await Activity.findByIdAndUpdate(activityId, req.body, { new: true });
+        if (!activity) {
+            return res.status(404).json({ message: 'Activity not found' });
+        }
         res.status(200).json({ status: true, data: activity, message: 'Activity updated successfully' });
     } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
-exports.getAllActivities = async function(req, res){
+
+exports.delete = async (req, res) => {
+    const activityId = req.params.id;
     try {
-        const activities = await Activity.findAll();
-        res.status(200).json({ status: true, data: activities, message: 'Activities fetched successfully' });
-    } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
-    }
-}
-exports.getActivity = async (req,res)=>{
-    try {
-        const { id } = req.params;
-        const activity = await Activity.findByPk(id);
+        const activity = await Activity.findByIdAndDelete(activityId);
         if (!activity) {
-            return res.status(404).json({ status: false,message: 'Activity not found' });
+            return res.status(404).json({ message: 'Activity not found' });
         }
-        res.status(200).json({ status: true, data: activity, message: 'Activity fetched successfully' });
+        res.status(200).json({ status: true, data: activity, message: 'Activity deleted successfully' });
     } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
+        res.status(400).json({ message: error.message });
     }
-}
+};
+
+exports.getActivitiesByPayment = async function (req, res) {
+    const paymentId = req.params.id;
+    try {
+        const activity = await Activity.find({ paymentId: paymentId });
+        if (!activity) {
+            return res.status(404).json({ message: 'Activity not found' });
+        }
+        res.status(200).json({ status: true, data: activity, message: 'Activity retrieved successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+

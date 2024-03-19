@@ -1,77 +1,28 @@
-const Query = require('../models/query');
-const QuerySource = require('../models/querySource');
-const Destination = require('../models/city');
-const AssignedUser = require('../models/userMaster');
-const PackagePayment = require('../models/packagePayment');
-const Guest = require('../models/guest');
-const GuestDoc = require('../models/guestDocument');
+const Payment = require('../models/payment');
 
-exports.getQuery = async (req, res) => {
-    const { id } = req.params;
+exports.getQueryByPayment = async (req, res) => {
+    const id = req.params.id;
     try {
-        const query = await Query.findByPk(id, {
-            include: [
-                {
-                    model: QuerySource,
-                    as: 'querySource'
-                },
-                {
-                    model: Destination,
-                    as: 'destination'
-                },
-                {
-                    model: AssignedUser,
-                    as: 'assignedUser'
-                },
-            ]
-        });
-        if (!query) {
-            return res.status(404).json({ error: 'Query not found' });
+        const payment = await Payment.findById(id)
+            .populate({
+                path: 'queryId',
+                populate: [
+                    { path: 'clientId' },
+                    { path: 'destinationId' },
+                    { path: 'assignTo' },
+                    { path: 'addedBy' },
+                    { path: 'sourceId' }
+                ]
+            })
+            .populate('packageId').populate('paymentBy');
+
+
+        if (!payment) {
+            return res.status(404).json({ message: 'Payment not found' });
         }
 
-        // Now, fetch associated PackagePayments for the Query
-        const packagePayments = await PackagePayment.findAll({
-            where: {
-                queryId: id // Filter by the queryId
-            }
-        });
-
-        // Attach the packagePayments to the query object
-        query.dataValues.packagePayments = packagePayments;
-
-        res.json({ status: true, data: query });
+        res.status(200).json({ status: true, data: payment, message: 'Fetched payment successfully' }); // Changed from `query` to `payment`
     } catch (error) {
-        console.error('Error fetching query:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(400).json({ message: error.message });
     }
 };
-exports.getQueryGuest = async (req, res) => {
-    const queryId = req.params.id;
-    try {
-        const query = await Guest.findAll({
-            where: {
-                queryId: queryId
-            }
-        });
-        
-        if (!query || query.length === 0) {
-            return res.status(404).json({ error: 'Query not found' });
-        }
-        const guestDoc = await GuestDoc.findAll({
-            where: {
-                queryId: queryId
-            }
-        });
-
-        // Iterate over each item in the query array and attach the guestDoc
-        query.forEach(item => {
-            item.dataValues.guestDoc = guestDoc;
-        });
-
-        res.json({ status: true, data: query });
-    } catch (error) {
-        console.error('Error fetching query:', error);
-        res.status(500).json({ error: error });
-    }
-};
-

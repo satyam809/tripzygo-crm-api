@@ -2,49 +2,68 @@ const Transportation = require('../models/transportation');
 const multer = require('multer');
 exports.upload = multer();
 
-exports.createTransportation = async (req, res) => {
+exports.create = async (req, res) => {
     try {
-        const transportation = await Transportation.create(req.body);
+        const transportation = new Transportation(req.body);
+        await transportation.save();
         res.status(200).json({ status: true, data: transportation, message: 'Transportation created successfully' });
     } catch (error) {
-        res.status(400).json({ status: false, message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
 
-exports.updateTransportation = async (req, res) => {
+exports.get = async (req, res) => {
+    const id = req.params.id;
     try {
-        const { id } = req.params;
-        const transportation = await Transportation.findByPk(id);
-
+        const transportation = await Transportation.findById(id);
         if (!transportation) {
-            return res.status(404).json({ status: false,message: 'Transportation not found' });
-        }
-
-        await transportation.update({ ...req.body });
-
-        res.status(200).json({ status: true, data: transportation, message: 'Transportation updated successfully' });
-    } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
-    }
-};
-
-exports.getAllTransportations = async function (req, res) {
-    try {
-        const transportations = await Transportation.findAll();
-        res.status(200).json({ status: true, data: transportations, message: 'Transportations retrieved successfully' });
-    } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
-    }
-};
-exports.getTransportation = async function (req, res){
-    try {
-        const { id } = req.params;
-        const transportation = await Transportation.findByPk(id);
-        if (!transportation) {
-            return res.status(404).json({ status: false,message: 'Transportation not found' });
+            return res.status(404).json({ message: 'Transportation not found' });
         }
         res.status(200).json({ status: true, data: transportation, message: 'Transportation retrieved successfully' });
     } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
+        res.status(400).json({ message: error.message });
     }
-}
+};
+
+// Assuming you have already set up multer as shown in your code snippet
+
+exports.update = async function (req, res) {
+    const id = req.params.id;
+    try {
+        // Check if a file was uploaded
+        const transportation = await Transportation.findByIdAndUpdate(id, req.body, { new: true });
+        if (!transportation) {
+            return res.status(404).json({ message: 'Transportation not found' });
+        }
+        res.status(200).json({ status: true, data: transportation, message: 'Transportation updated successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.delete = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const transportation = await Transportation.findByIdAndDelete(id);
+        if (!transportation) {
+            return res.status(404).json({ message: 'Transportation not found' });
+        }
+        res.status(200).json({ status: true, data: transportation, message: 'Transportation deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.getTransportationsByPayment = async function (req, res) {
+    const paymentId = req.params.id;
+    try {
+        const transportation = await Transportation.find({ paymentId: paymentId });
+        if (!transportation) {
+            return res.status(404).json({ message: 'Transportation not found' });
+        }
+        res.status(200).json({ status: true, data: transportation, message: 'Transportation retrieved successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+

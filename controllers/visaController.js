@@ -1,71 +1,109 @@
-const PackageBuilderEvent = require('../models/packageBuilderEvent');
+const Visa = require('../models/visa');
+const fs = require('fs');
 const multer = require('multer');
-exports.upload = multer();
+const path = require('path');
 
-exports.saveVisa = async (req, res) => {
-    try {
-        const results = await PackageBuilderEvent.create({...req.body,sectionType:'feeInsurance'});
-        res.status(200).json({ status: true, data: results, message: 'Visa saved successfully' });
-    } catch (error) {
-        res.status(400).json({ status: false,message: error.message });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/visa/'); // Specify the folder where files will be stored
+    },
+    filename: (req, file, cb) => {
+        const timestamp = Date.now(); // Get current timestamp
+        const extension = path.extname(file.originalname); // Get file extension
+        cb(null, `${timestamp}${extension}`); // Concatenate timestamp and extension for unique filename
     }
-};
-exports.updateVisa = async (req, res) => {
+});
+const upload = multer({ storage: storage });
+exports.upload = upload;
+
+
+exports.create = async (req, res) => {
+    //console.log(req.body);
     try {
-        const { id } = req.params;
-        const result = await PackageBuilderEvent.findByPk(id);
-        if (!result) {
-            return res.status(404).json({ status: false, message: 'Id not found' });
+        if(req.file){
+            req.body.file = req.file.filename
         }
-        // Correctly update the instance found by findByPk
-        await result.update(req.body);
-
-        // Refresh the instance to get the updated values
-        const updatedResult = await PackageBuilderEvent.findByPk(id);
-
-        res.status(200).json({ status: true, data: updatedResult, message: 'Visa updated successfully' });
+        const visa = new Visa(req.body);
+        await visa.save();
+        res.status(200).json({ status: true, data: visa, message: 'Visa created successfully' });
     } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
 
-exports.getPackageVisa = async (req, res) => {
+exports.get = async (req, res) => {
+    const id = req.params.id;
     try {
-        const { id } = req.params;
-        const result = await PackageBuilderEvent.findByPk(id);
-        if (!result) {
-            return res.status(404).json({ status: false,message: 'Id not found' });
+        const visa = await Visa.findById(id);
+        if (!visa) {
+            return res.status(404).json({ message: 'Visa not found' });
         }
-        res.status(200).json({ status: true, data: result, message: 'Retrieved successfully' });
+        res.status(200).json({ status: true, data: visa, message: 'Visa retrieved successfully' });
     } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
-exports.getAllPackageVisa = async function (req, res) {
-    const packageId = req.params.packageId;
+
+// Assuming you have already set up multer as shown in your code snippet
+
+exports.update = async function (req, res) {
+    const id = req.params.id;
+    console.log(req.file);
     try {
-        const results = await PackageBuilderEvent.findAll({
-            where: {
-                packageId:packageId
+        // Check if a file was uploaded
+        if (req.file) {
+            // Path to the old visa image
+            const oldVisaPath = path.join(__dirname, '../uploads/visa/', req.file.filename);
+
+            // Delete the old visa image if it exists
+            if (fs.existsSync(oldVisaPath)) {
+                fs.unlinkSync(oldVisaPath);
             }
-        });
-        res.status(200).json({ status: true, data: results, message: 'Visa retrieved successfully' });
-    } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
-    }
-};
-exports.deleteVisa = async function (req, res) {
-    const { id } = req.params;
-    try {
-        const deleted = await PackageBuilderEvent.destroy({
-            where: { id: id }
-        });
-        if (deleted) {
-            res.json({  status: true, message: "Visa deleted successfully" });
+
+            // Update the visa document with the new visa image information
+            req.body.file = req.file.filename;
+            const visa = await Visa.findByIdAndUpdate(id, req.body, { new: true });
+            if (!visa) {
+                return res.status(404).json({ message: 'Visa not found' });
+            }
+            res.status(200).json({ status: true, data: visa, message: 'Visa updated successfully with new file' });
         } else {
-            res.status(404).json({  status: false,message: "Id not found" });
+            const visa = await Visa.findByIdAndUpdate(id, req.body, { new: true });
+            if (!visa) {
+                return res.status(404).json({ message: 'Visa not found' });
+            }
+            res.status(200).json({ status: true, data: visa, message: 'Visa updated successfully' });
         }
     } catch (error) {
-        res.status(500).json({  status: false,message: error.message });
+        res.status(400).json({ message: error.message });
     }
 };
+
+
+
+exports.delete = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const visa = await Visa.findByIdAndDelete(id);
+        if (!visa) {
+            return res.status(404).json({ message: 'Visa not found' });
+        }
+        res.status(200).json({ status: true, data: visa, message: 'Visa deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.getVisaByPayment = async function (req, res) {
+    const paymentId = req.params.id;
+    try {
+        const visa = await Visa.find({ paymentId: paymentId });
+        if (!visa) {
+            return res.status(404).json({ message: 'Visa not found' });
+        }
+        res.status(200).json({ status: true, data: visa, message: 'Visa retrieved successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+

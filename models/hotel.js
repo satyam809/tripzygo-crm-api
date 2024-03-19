@@ -1,166 +1,33 @@
-// Import Sequelize and the connection instance
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Update this with your database configuration
-const Country = require('./country');
-const City = require('./city');
-const Query = require('./query');
+const mongoose = require('mongoose');
+const Payment = require('./payment');
+const { Schema } = mongoose;
 
-// Define the HotelMaster model
-const Hotel = sequelize.define('hotelMaster', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  query_id: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Query',
-      key: 'id'
-    },
-    allowNull: true
-  },
-  name: {
-    type: DataTypes.STRING(200),
-    allowNull: true
-  },
-  countryId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Country',
-      key: 'id'
-    },
-    allowNull: true
-  },
-  destination: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'City',
-      key: 'id'
-    },
-    allowNull: true
-  },
-  hotel_destination: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  category: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  },
-  room_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    defaultValue: 0
-  },
-  meal: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    defaultValue: 0
-  },
-  amenities: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    defaultValue: '0'
-  },
-  hotelPhoto: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  address: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 1
-  },
-  hotelType: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  },
-  hotel_type: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  
-  checkIn: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  checkOut: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  numOfAdults:{
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  },numOfKids:{
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  },numOfRooms:{
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  },
-  details: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  mapURL: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  addedBy: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  },
-  dateAdded: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW
-  },
-  contactPerson: {
-    type: DataTypes.STRING(50),
-    allowNull: true
-  },
-  contactPersonEmail: {
-    type: DataTypes.STRING(250),
-    allowNull: true
-  },
-  contactPersonPhone: {
-    type: DataTypes.STRING(150),
-    allowNull: true
-  },
-  alternateEmail: {
-    type: DataTypes.STRING(50),
-    allowNull: true
-  },
-  alternatePhone: {
-    type: DataTypes.STRING(15),
-    allowNull: true
-  },
-  imgLink: {
-    type: DataTypes.STRING(200),
-    allowNull: true
-  },
-  voucher: {
-    type: DataTypes.STRING,
-    allowNull: true
-  }
+const hotelSchema = new Schema({
+ paymentId: {
+    type: Schema.Types.ObjectId,
+        ref: Payment
+ },
+ queryId: String,
+ name: String,
+ destination: String,
+ category: String,
+ roomName: String,
+ meal: String,
+ hotelType: String,
+ checkIn: String,
+ checkOut: String,
+ numOfAdults: Number,
+ numOfKids: Number,
+ numOfRooms: Number,
+ voucher: String,
+ status: { type: Number, required: true, default: 0 },
 }, {
-  tableName: 'hotelMaster', // Specify the table name if it's different
-  timestamps: false // If you don't have timestamps in your table
+ collection: 'hotels',
+ timestamps: false,
+ versionKey: '__v', // Enable versioning
+ minimize: false // Override default behavior to store empty objects
 });
-Hotel.belongsTo(Country, { foreignKey: 'countryId', as: 'country' });
-Hotel.belongsTo(City, { foreignKey: 'destination', as: 'city' });
-Hotel.belongsTo(Query, { foreignKey: 'query_id', as: 'query' });
 
-// Export the HotelMaster model
+const Hotel = mongoose.model('Hotel', hotelSchema);
+
 module.exports = Hotel;
