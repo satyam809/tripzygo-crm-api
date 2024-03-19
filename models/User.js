@@ -133,6 +133,6 @@ const userSchema = new mongoose.Schema({
   is_scheduled: String
 });
 
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const ClientAndSupplier = require('./clientAndSupplier');
-const City = require('./City');
-const Source = require('./Source');
-const User = require('./User');
+const City = require('./city');
+const Source = require('./source');
+const User = require('./user');
 const { Schema } = mongoose;
 
 const querySchema = new Schema({

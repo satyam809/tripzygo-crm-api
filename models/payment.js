@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const User = require('./User');
-const Query = require('./Query');
-const Package = require('./Package');
+const User = require('./user');
+const Query = require('./query');
+const Package = require('./package');
 const { Schema } = mongoose;
 
 const paymentSchema = new Schema({
@@ -31,6 +31,6 @@ const paymentSchema = new Schema({
     permission_status: String,
 });
 
-const Payment = mongoose.model('payments', paymentSchema);
+const Payment = mongoose.model('Payment', paymentSchema);
 
 module.exports = Payment;

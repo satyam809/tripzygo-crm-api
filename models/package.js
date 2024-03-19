@@ -116,11 +116,6 @@ const packageSchema = new Schema({
     "slug": String,
     "package_rating": Number,
     "hotel_facility": String
-}, {
-    collection: 'packages',
-    timestamps: false,
-    versionKey: '__v', // Enable versioning
-    minimize: false // Override default behavior to store empty objects
 });
 
 const Package = mongoose.model('Package', packageSchema);

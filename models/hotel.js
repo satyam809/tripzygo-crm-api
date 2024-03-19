@@ -21,11 +21,6 @@ const hotelSchema = new Schema({
  numOfRooms: Number,
  voucher: String,
  status: { type: Number, required: true, default: 0 },
-}, {
- collection: 'hotels',
- timestamps: false,
- versionKey: '__v', // Enable versioning
- minimize: false // Override default behavior to store empty objects
 });
 
 const Hotel = mongoose.model('Hotel', hotelSchema);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Query = require('./Query');
-const User = require('./User');
+const Query = require('./query');
+const User = require('./user');
 const { Schema } = mongoose;
 
 const guestSchema = new Schema({

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Guest = require('./guest');
-const User = require('./User');
+const User = require('./user');
 const { Schema } = mongoose;
 
 const documentSchema = new Schema({

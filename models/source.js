@@ -5,6 +5,6 @@ const sourceSchema = new mongoose.Schema({
   status: Number
 });
 
-const Source = mongoose.model('sources', sourceSchema);
+const Source = mongoose.model('Source', sourceSchema);
 
 module.exports = Source;

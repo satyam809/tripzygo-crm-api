@@ -11,6 +11,6 @@ const citySchema = new mongoose.Schema({
   deletestatus: Number
 });
 
-const City = mongoose.model('cities', citySchema);
+const City = mongoose.model('City', citySchema);
 
 module.exports = City;
