@@ -1,5 +1,4 @@
 const Payment = require('../models/payment');
-const Hotel = require('../models/hotel');
 
 exports.getAllPayments = async (req, res) => {
     try {
@@ -16,8 +15,19 @@ exports.getAllPayments = async (req, res) => {
             .skip(startIndex)
             .limit(limit)
             .populate('packageId')
-            .populate('paymentBy') // Populate the paymentBy field
-            .populate('queryId'); // Populate the queryId field
+            .populate('paymentBy')
+            .populate({
+                path: 'queryId',
+                populate: [
+                    { path: 'clientId' }, // Populate the clientId field inside queryId
+                    { path: 'destinationId' }, // Populate the destinationId field inside queryId
+                    { path: 'assignTo' },
+                    { path: 'addedBy' },
+                    { path: 'sourceId' }
+                ]
+            });
+
+        // Populate the queryId field
 
         const paginationInfo = {
             currentPage: page,
