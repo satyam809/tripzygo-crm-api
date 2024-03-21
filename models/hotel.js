@@ -7,7 +7,7 @@ const hotelSchema = new Schema({
     type: Schema.Types.ObjectId,
         ref: Payment
  },
- queryId: String,
+ vendor:String,
  name: String,
  destination: String,
  category: String,

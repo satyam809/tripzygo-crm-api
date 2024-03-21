@@ -8,7 +8,11 @@ const queryController = require('./controllers/queryController');
 const transportationController = require('./controllers/transportationController');
 const visaController = require('./controllers/visaController');
 const guestController = require('./controllers/guestController');
+const userController = require('./controllers/userController');
+const auth = require('./middleware/auth');
 
+router.post('/api/register', userController.upload.none(), userController.register);
+router.post('/api/login', userController.upload.none(), userController.login);
 
 router.post('/api/hotel', hotelController.upload.single('voucher'), hotelController.createHotel);
 router.get('/api/hotel/:id', hotelController.getHotel);
